@@ -20,7 +20,7 @@ class complex{
 };
 int main(){
     complex c1(10,15);
-    c1.print();
+    c1.print();//function call from class
 //if c1.real here throw error as private
     return 0;
 }

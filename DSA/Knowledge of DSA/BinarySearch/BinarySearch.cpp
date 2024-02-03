@@ -32,3 +32,5 @@ int main(){
     cout<<"Index of 8 is"<<oddindex<<endl;
     return 0;
 }
+
+//Recurssion

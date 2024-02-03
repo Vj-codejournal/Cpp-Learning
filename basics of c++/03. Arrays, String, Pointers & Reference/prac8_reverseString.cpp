@@ -31,3 +31,50 @@ int main(){
     cout<<newstring; 
     return 0;
 }
+
+
+//efficient 
+
+#include <iostream>
+
+using namespace std;
+
+int main(){
+    string s = "varun";
+    int i = 0;
+    int j = s.length () -1;
+    while(i<=j){
+        swap(s[i],s[j]);
+
+        i++;
+        j--;
+    }
+    return 0;
+}
+
+
+//stack method
+
+#include <iostream>
+#include<stack>
+using namespace std;
+
+int main(){
+    string str = "varun";
+    stack<char> s;
+    for(int i = 0;i<str.length();i++){
+        char ch = str[i];
+        s.push(ch);
+    }
+
+    string ans = "";
+
+    while(!s.empty()){
+        char  ch = s.top();
+        ans.push_back(ch);
+        s.pop();
+
+    }
+    cout<<ans<<endl;
+    return 0;
+}

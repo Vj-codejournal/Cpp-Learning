@@ -30,24 +30,24 @@ template <typename T>
 // A structure can also be used
 // instead of a class as it has
 // public access type
-struct Pair {
+struct Pair1 {
 
     // These pairs can be of any type
     T x, y;
 
     // Constructor accpecting both
     // parameters of same type
-    Pair(T i, T j)
+    Pair1(T i, T j)
     {
         x = i;
         y = j;
     }
 
     // Function of T type
-    T getFirst();
+    T getFirst1();
 
     // Function of T type
-    T getSecond()
+    T getSecond1()
     {
         return y;
     }
@@ -55,7 +55,7 @@ struct Pair {
 
 template <typename T>
 
-Pair<T>::getFirst()
+T Pair1<T>::getFirst1()
 {
     return x;
 }
@@ -65,8 +65,8 @@ int main()
 {
 
     // Pair needed to be passed
-    Pair<int> p1(10, 20);
-    cout << p1.getFirst() << " "
-         << p1.getSecond();
+    Pair1<int> p(10, 20);
+    cout << p.getFirst1() << " "
+         << p.getSecond1();
     return 0;
 }

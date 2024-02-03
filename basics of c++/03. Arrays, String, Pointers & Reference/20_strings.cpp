@@ -66,6 +66,8 @@ int main(){
     for(auto it= str.begin();it != str.end();it++){//this is like traversing any normal container in c++//can get start iterator with str.begin and similar for end
         cout<<(*it); //value at that iteration//already have address here so can change the value
     }
+    
+    //to add to a string can do s1= s1 + 'a' or can do s1.push_back('a'); also
     return 0;
 }
 

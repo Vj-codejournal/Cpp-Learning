@@ -76,3 +76,5 @@ int main(){
 //for weighted in adjecency matrix store the weight in place of 1
 
 //for list store pair<int,int> 
+
+//can store adj list in a map int ,list

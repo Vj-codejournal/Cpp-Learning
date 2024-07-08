@@ -80,28 +80,136 @@ void inorder(node* root){
     inorder(root->right);//right
 
 }
+
+// vector<int> inorder(TreeNode* root){
+//     vector<int> ans;
+
+//     stack<TreeNode*> st;
+//     TreeNode* node = root;
+
+//     while(true){
+//         if(node != NULL){
+//             st.push(node);
+//             node = node->left;
+//         }
+//         else{
+//             if(st.empty() == true){
+//                 break;
+//             }
+//             node = st.pop();
+            
+//             ans.push_back(node->val);
+//             node = node->right;
+//         }
+//     }
+//     return ans;
+
+// }
+
+
 void preorder(node* root){
     //base case
     if(root == NULL){
         return;
     }
     cout<<root->data<<" ";//node
-    inorder(root->left);//left
+    preorder(root->left);//left
     
-    inorder(root->right);//right
+    preorder(root->right);//right
 
 }
+// vector<int> preorder(TreeNode* root){
+//     vector<int> ans;
+//     if(root == NULL) return ans;
+
+//     stack<TreeNode*> st;
+
+//     st.push(root);
+//     while(!st.empty()){
+//         root = st.top();
+//         st.pop();
+//         ans.push_back(root->val);
+//         if(root->right != NULL){
+//             st.push(root->right);
+//         }
+//         if(root->left != NULL){
+//             st.push(root->left);
+//         }
+//     }
+//     return ans;
+
+// }
 void postorder(node* root){
     //base case
     if(root == NULL){
         return;
     }
     
-    inorder(root->left);//left
-    inorder(root->right);//right
+    postorder(root->left);//left
+    postorder(root->right);//right
     cout<<root->data<<" ";//node
 
 }
+
+//POSTORDER using iterative 2 stacks
+// vector<int> postorder(TreeNode* root){
+//     vector<int> ans;
+//     if(root == NULL) return ans;
+
+//     stack<TreeNode*> st1,st2;
+
+//     st1.push(root);
+//     while(!st1.empty()){
+//         root = st1.top();
+//         st1.pop();
+//         st2.push(root);
+//         if(root->left != NULL){
+//             st1.push(root->left);
+//         }
+//         if(root->right != NULL){
+//             st1.push(root->right);
+//         }
+//     }
+//     while(!st2.empty()){
+//         ans.push_back(st2.top()->val);
+//         st2.pop();
+//     }
+
+//     return ans;
+
+// }
+
+//POSTORDER using iterative 1 stack
+// vector<int> postorder(TreeNode* root){
+//     vector<int> ans;
+//     if(root == NULL) return ans;
+//    stack<TreeNode*> st;
+//   TreeNode* curr = root;
+// while(curr != NULL || !st.empty()){
+//     if(curr != NULL){
+//         st.push(curr);
+//         curr = curr->left;
+//     }
+//     else{
+//         TreeNode* temp = st.top()->right;
+//         if(temp == NULL){
+//             temp = st.top();
+//             st.pop();
+//             ans.push_back(temp->val);
+//             while(!st.empty() && temp == st.top()->right){
+//                 temp = st.top();
+//                 st.pop();
+//                 ans.push_back(temp->val);
+//             }
+//         }
+//         else{
+//             curr = temp;
+//         }
+//     }
+// }
+//}
+
+
 
 void buildFromLevelOrder(node * &root){
     queue<node*>  q;

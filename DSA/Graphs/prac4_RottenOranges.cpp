@@ -37,7 +37,7 @@ class Solution
             int c = q.front().first.second;
 
             int t = q.front().second;
-            tm = max(tm,t);
+            tm = max(tm,t);//get the max rot time 
             q.pop();
 
             for(int i = 0;i<4;i++){
@@ -53,7 +53,7 @@ class Solution
         for(int i = 0;i<n;i++){
             for(int j = 0;j<m;j++){
                 if(vis[i][j] != 2 &&   grid[i][j] == 1)return -1;
-                
+                //if any of the 1s were unreachable
             }
         }
         return tm;

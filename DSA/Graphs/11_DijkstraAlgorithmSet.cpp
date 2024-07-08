@@ -38,7 +38,7 @@ class Solution
             }
         }
         return dist;
-
+        
     }
 };
 int main(){

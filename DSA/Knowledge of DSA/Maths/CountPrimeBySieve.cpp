@@ -12,7 +12,7 @@ public:
         vector<bool>  prime(n+1,true);
         prime[0] = prime[1] = false;
 
-        for(int i = 2;i<n;i++){
+        for(int i = 2;i<n;i++){//run it to i*i<= n as we now no need to check further sqrt(n) method
             if(prime[i]){
                 cnt++;
 

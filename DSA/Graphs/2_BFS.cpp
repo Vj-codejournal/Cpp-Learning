@@ -43,9 +43,7 @@ int main() {
     cin >> tc;
     while (tc--) {
         int V, E;
-        cin >> V >>
-
-            E;
+        cin >> V >>E;
 
         vector<int> adj[V];
 
@@ -53,7 +51,7 @@ int main() {
             int u, v;
             cin >> u >> v;
             adj[u].push_back(v);
-            // 		adj[v].push_back(u);
+            adj[v].push_back(u);
         }
         // string s1;
         // cin>>s1;

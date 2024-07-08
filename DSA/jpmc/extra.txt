@@ -1,0 +1,411 @@
+Ques1 Write a program to implement the sum of the subset problem using backtracking.
+
+#include <bits/stdc++.h>
+using namespace std;
+bool flag = 0;
+void PrintSubsetSum(int i, int n, int set[], int targetSum, vector<int>& subset)
+{
+	if (targetSum == 0) {
+		flag = 1;
+		cout << "[ ";
+		for (int i = 0; i < subset.size(); i++) {
+			cout << subset[i] << " ";
+		}
+		cout << "]";
+		return;
+	}
+	if (i == n) {
+		return;
+	}
+	PrintSubsetSum(i + 1, n, set, targetSum, subset);
+	if (set[i] <= targetSum) {
+		subset.push_back(set[i]);
+		PrintSubsetSum(i + 1, n, set, targetSum - set[i], subset);
+		subset.pop_back();
+	}
+}
+int main()
+{
+	int set[] = { 1, 2, 1 };
+	int sum = 3;
+	int n = sizeof(set) / sizeof(set[0]);
+	vector<int> subset;
+	cout << "Output 1:" << endl;
+	PrintSubsetSum(0, n, set, sum, subset);
+	cout << endl; 
+	flag = 0;
+	int set2[] = { 3, 34, 4, 12, 5, 2 };
+	int sum2 = 30;
+	int n2 = sizeof(set) / sizeof(set[0]);
+	vector<int> subset2;
+	cout << "Output 2:" << endl;
+	PrintSubsetSum(0, n2, set2, sum2, subset2);
+	if (!flag) {
+		cout << "There is no such subset";
+	}
+	return 0;
+}
+
+Ques2 Write a program to implement a graph coloring problem using backtracking.
+
+#include <bits/stdc++.h>
+using namespace std;
+#define V 4
+void printSolution(int color[]);
+bool isSafe(int v, bool graph[V][V], int color[], int c)
+{
+	for (int i = 0; i < V; i++)
+		if (graph[v][i] && c == color[i])
+			return false;
+	return true;
+}
+bool graphColoringUtil(bool graph[V][V], int m, int color[], int v)
+{
+	if (v == V) return true;
+	for (int c = 1; c <= m; c++) {
+		if (isSafe(v, graph, color, c)) {
+			color[v] = c;
+			if (graphColoringUtil(graph, m, color, v + 1)
+				== true)
+				return true;
+			color[v] = 0;
+		}
+	}
+	return false;
+}
+bool graphColoring(bool graph[V][V], int m)
+{
+	int color[V];
+	for (int i = 0; i < V; i++)
+		color[i] = 0;
+	if (graphColoringUtil(graph, m, color, 0) == false) {
+		cout << "Solution does not exist";
+		return false;
+	}
+	printSolution(color);
+	return true;
+}
+void printSolution(int color[])
+{
+	cout << "Solution Exists:" << " Following are the assigned colors" << "\n";
+	for (int i = 0; i < V; i++)  cout << " " << color[i] << " ";
+	cout << "\n";
+}
+int main()
+{
+	bool graph[V][V] = {
+		{ 0, 1, 1, 1 },
+		{ 1, 0, 1, 0 },
+		{ 1, 1, 0, 1 },    
+		{ 1, 0, 1, 0 },
+	};
+	int m = 3;
+	graphColoring(graph, m);
+	return 0;
+}
+
+Ques3 Write a program to solve the N-Queens problem using backtracking.
+
+#include <bits/stdc++.h>
+#define N 4
+using namespace std;
+void printSolution(int board[N][N])
+{
+	for (int i = 0; i < N; i++) {
+		for (int j = 0; j < N; j++)
+		if(board[i][j]) cout << "Q ";
+		else cout<<". ";
+		printf("\n");
+	}
+}
+bool isSafe(int board[N][N], int row, int col)
+{
+	int i, j;
+	for (i = 0; i < col; i++)
+		if (board[row][i])  return false;
+	for (i = row, j = col; i >= 0 && j >= 0; i--, j--)
+		if (board[i][j])  return false;
+	for (i = row, j = col; j >= 0 && i < N; i++, j--)
+		if (board[i][j])  return false;
+	return true;
+}
+bool solveNQUtil(int board[N][N], int col)
+{
+	if (col >= N)
+		return true;
+	for (int i = 0; i < N; i++) {
+		if (isSafe(board, i, col)) {
+			board[i][col] = 1;
+			if (solveNQUtil(board, col + 1))
+				return true;
+			board[i][col] = 0; // BACKTRACK
+		}
+	}
+	return false;
+}
+bool solveNQ()
+{
+
+
+	int board[N][N] = { { 0, 0, 0, 0 },
+		                      { 0, 0, 0, 0 },
+			       { 0, 0, 0, 0 },
+			       { 0, 0, 0, 0 } };
+
+	if (solveNQUtil(board, 0) == false) {
+		cout << "Solution does not exist";
+		return false; 
+	}
+	printSolution(board);
+	return true;
+}
+int main()
+{
+	solveNQ();
+	return 0;
+}
+
+LAB 16
+
+Ques1 Write a program to implement 15 puzzle problem using least cost branch and bound.
+
+#include <iostream>
+using namespace std;
+#define N 4
+int GOAL[N][N] = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};
+struct State { 
+    int board[N][N], x, y, cost, heuristic;
+};
+
+bool isGoal(State& s) {
+    for(int i=0;i<N;++i)
+        for(int j=0;j<N;++j)
+            if(s.board[i][j]!=GOAL[i][j])
+                return false;
+    return true;
+}
+bool isValid(int x, int y) {
+    return x >= 0 && x < N && y >= 0 && y < N;
+}
+vector<State> getSuccessors(State& s) {
+    vector<State> succ;
+    int dx[] = {0, 0, 1, -1}, dy[] = {1, -1, 0, 0};
+    for (int i = 0; i < 4; ++i) {
+        int nx = s.x + dx[i], ny = s.y + dy[i];				Output:
+        if (isValid(nx, ny)) {
+            State ns = s;
+            swap(ns.board[s.x][s.y], ns.board[nx][ny]);
+            ns.x = nx; ns.y = ny; ns.cost++;
+            succ.push_back(ns);
+        }
+    }
+    return succ;
+}
+int solve(vector<vector<int>>& initial) {
+    priority_queue<State> pq; unordered_set<int> visited;
+    pq.push({initial, 3, 3, 0, 0});
+
+    while (!pq.empty()) {
+        State cur = pq.top(); pq.pop();
+        if (isGoal(cur)) return cur.cost;
+        for (const auto& succ : getSuccessors(cur))
+            if (visited.find(succ.board[0][0]) == visited.end()) 
+                pq.push(succ), visited.insert(succ.board[0][0]);
+    }
+    return -1;
+}
+int main() {
+    vector<vector<int>> initial = {{1,2,3,4},{5,6,7,8},{9,10,11,12},{13,14,15,0}};
+    cout << "Minimum number of moves required: " << solve(initial) << endl;
+    return 0;
+}
+
+Ques2 Write a program to implement 0/1 knapsack problem using branch and bound.
+
+#include <bits/stdc++.h>
+using namespace std;
+struct Item
+{
+	float weight;
+	int value;
+};
+struct Node
+{
+	int level, profit, bound;
+	float weight;
+};
+bool cmp(Item a, Item b)
+{
+	double r1 = (double)a.value / a.weight;
+	double r2 = (double)b.value / b.weight;
+	return r1 > r2;
+}
+int bound(Node u, int n, int W, Item arr[])
+{
+	if (u.weight >= W)
+		return 0;
+	int profit_bound = u.profit;
+	int j = u.level + 1;
+	int totweight = u.weight;
+	while ((j < n) && (totweight + arr[j].weight <= W))
+	{
+		totweight += arr[j].weight;
+		profit_bound += arr[j].value;
+		j++;
+	}
+	if (j < n)
+		profit_bound += (W - totweight) * arr[j].value / arr[j].weight;
+	return profit_bound;
+}
+int knapsack(int W, Item arr[], int n)
+{
+	sort(arr, arr + n, cmp);
+	queue<Node> Q;
+	Node u, v;
+	u.level = -1;
+	u.profit = u.weight = 0;
+	Q.push(u);
+	
+	int maxProfit = 0;
+	while (!Q.empty())
+	{
+		u = Q.front();
+		Q.pop();
+		if (u.level == -1)
+			v.level = 0;
+		if (u.level == n-1)
+			continue;
+		v.level = u.level + 1;
+		v.weight = u.weight + arr[v.level].weight;
+		v.profit = u.profit + arr[v.level].value;
+		if (v.weight <= W && v.profit > maxProfit)
+			maxProfit = v.profit;
+		v.bound = bound(v, n, W, arr);
+		if (v.bound > maxProfit)
+			Q.push(v);
+		v.weight = u.weight;
+		v.profit = u.profit;
+		v.bound = bound(v, n, W, arr);
+		if (v.bound > maxProfit)
+			Q.push(v);
+	}
+	return maxProfit;
+}
+int main()
+{
+	int W = 10; // Weight of knapsack
+	Item arr[] = {{2, 40}, {3.14, 50}, {1.98, 100},
+				{5, 95}, {3, 30}};
+	int n = sizeof(arr) / sizeof(arr[0]);
+	cout << "Maximum possible profit = "
+		<< knapsack(W, arr, n); l
+	return 0;
+}
+
+Ques3 Write a program to implement travelling salesman problem using branch and bound
+
+#include <bits/stdc++.h>
+using namespace std;
+const int N = 4;
+int final_path[N+1];
+bool visited[N];
+int final_res = INT_MAX;
+void copyToFinal(int curr_path[])
+{
+	for (int i=0; i<N; i++)
+		final_path[i] = curr_path[i];
+	final_path[N] = curr_path[0];
+}
+int firstMin(int adj[N][N], int i)
+{
+	int min = INT_MAX;
+	for (int k=0; k<N; k++)
+		if (adj[i][k]<min && i != k)
+			min = adj[i][k];
+	return min;
+}
+int secondMin(int adj[N][N], int i)
+{
+	int first = INT_MAX, second = INT_MAX;
+	for (int j=0; j<N; j++)
+	{
+		if (i == j)  continue;
+		if (adj[i][j] <= first)
+		{
+			second = first;
+			first = adj[i][j];
+		}
+		else if (adj[i][j] <= second &&
+				adj[i][j] != first)
+			second = adj[i][j];
+	}
+	return second;
+}
+void TSPRec(int adj[N][N], int curr_bound, int curr_weight,  int level, int curr_path[])
+{
+	if (level==N)
+	{
+		if (adj[curr_path[level-1]][curr_path[0]] != 0)
+		{
+			int curr_res = curr_weight + adj[curr_path[level-1]][curr_path[0]];
+			if (curr_res < final_res)
+			{
+				copyToFinal(curr_path);
+				final_res = curr_res;
+			}
+		}
+		return;
+	}
+	for (int i=0; i<N; i++)
+	{
+		if (adj[curr_path[level-1]][i] != 0 && visited[i] == false)
+		{
+			int temp = curr_bound;
+			curr_weight += adj[curr_path[level-1]][i];
+			if (level==1)
+			curr_bound -= ((firstMin(adj, curr_path[level-1]) + firstMin(adj, i))/2);
+			else
+			curr_bound -= ((secondMin(adj, curr_path[level-1]) + firstMin(adj, i))/2);
+			if (curr_bound + curr_weight < final_res)
+			{
+				curr_path[level] = i;
+				visited[i] = true;
+				TSPRec(adj, curr_bound, curr_weight, level+1, curr_path);
+			}
+			curr_weight -= adj[curr_path[level-1]][i];
+			curr_bound = temp;
+			memset(visited, false, sizeof(visited));
+			for (int j=0; j<=level-1; j++)
+				visited[curr_path[j]] = true;
+		}
+	}
+}
+void TSP(int adj[N][N])
+{
+	int curr_path[N+1];
+	int curr_bound = 0;
+	memset(curr_path, -1, sizeof(curr_path));
+	memset(visited, 0, sizeof(curr_path));
+	for (int i=0; i<N; i++)
+		curr_bound += (firstMin(adj, i) + secondMin(adj, i));
+	curr_bound = (curr_bound&1)? curr_bound/2 + 1 : 
+             curr_bound/2;
+	visited[0] = true;
+	curr_path[0] = 0;
+	TSPRec(adj, curr_bound, 0, 1, curr_path);
+}
+int main()
+{
+	int adj[N][N] = { {0, 10, 15, 20},          
+		{10, 0, 35, 25},
+		{15, 35, 0, 30},
+		{20, 25, 30, 0}
+	};
+	TSP(adj);
+	printf("Minimum cost : %d\n", final_res);
+	printf("Path Taken : ");
+	for (int i=0; i<=N; i++)
+		printf("%d ", final_path[i]);
+
+	return 0;
+}

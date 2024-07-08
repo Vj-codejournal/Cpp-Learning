@@ -17,7 +17,7 @@ public:
     }
     int numProvinces(vector<vector<int>> adj, int V)
     {   vector<int> adjlis[V];//0 will store for 1
-
+        //convert matrix to adjacency list
         for(int i = 0;i<V;i++){
             for(int j = 0;j<V;j++){
                 if(adj[i][j] == 1 && i != j){
@@ -30,7 +30,7 @@ public:
         int provinces = 0;
 
         int vis[V] = {0};
-
+        //check for all components ******this method use
         for (int i = 0; i < V; i++)
         {
             if (!vis[i])

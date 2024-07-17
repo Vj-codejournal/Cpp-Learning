@@ -27,6 +27,7 @@ class Solution {
     }
   public:
     int numberOfEnclaves(vector<vector<int>> &grid) {
+        //same as prac6_ReplaceOwithX those 1 which are not connected to 1 on boundary will never be able to walk of from them so start at boundary find 1s which are connected to 1s on boundary and apply dfs and mark them as visited then finally those who are left will be the answer
         int n = grid.size();
         int m = grid[0].size();
         vector<vector<int>> vis(n,vector<int>(m,0));

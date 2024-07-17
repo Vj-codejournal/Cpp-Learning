@@ -29,7 +29,7 @@ class Solution{
     }
 public:
     vector<vector<char>> fill(int n, int m, vector<vector<char>> mat)
-    {
+    {   //those zeros which are connect to ones on the edge will not be converted to X so go along first row and last row and first column and last column and apply dfs and mark all zeros connected to it as 1 then finally those who are left will be converted to X
         vector<vector<int>> vis(n,vector<int>(m,0));
         for(int j = 0;j<m;j++){
             //firstrow
@@ -43,9 +43,11 @@ public:
         }
 
         for(int i = 0;i<n;i++){
+            //first column
             if(!vis[i][0] && mat[i][0] == 'O'){
                 dfs(i,0,vis,mat);
             }
+            //last column
             if(!vis[i][m-1] && mat[i][m-1] == 'O'){
                 dfs(i,m-1,vis,mat);
             }

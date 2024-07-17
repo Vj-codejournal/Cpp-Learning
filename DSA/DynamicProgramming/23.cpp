@@ -1,87 +1,83 @@
 #include <iostream>
 #include <vector>
-#include <cstring>
+#include <unordered_map>
+#include <unordered_set>
+#include <queue>
 
-const int MAX_N = 100005;
-const int MOD = 1e9 + 7;
-const int MAX_PRIME = 100;
+using namespace std;
 
-std::vector<int> primes;
-std::vector<int> adj[MAX_N];
-int dp[MAX_N][MAX_PRIME];
+bool isConnected(unordered_map<char, unordered_set<char>> &adj, char start, unordered_set<char> &chars) {
+    unordered_set<char> visited;
+    queue<char> q;
+    q.push(start);
+    visited.insert(start);
 
-void sieve() {
-    bool is_prime[MAX_PRIME + 1];
-    memset(is_prime, true, sizeof(is_prime));
-    is_prime[0] = is_prime[1] = false;
-    
-    for (int i = 2; i * i <= MAX_PRIME; i++) {
-        if (is_prime[i]) {
-            for (int j = i * i; j <= MAX_PRIME; j += i) {
-                is_prime[j] = false;
+    while (!q.empty()) {
+        char curr = q.front();
+        q.pop();
+        for (char neighbor : adj[curr]) {
+            if (visited.find(neighbor) == visited.end()) {
+                visited.insert(neighbor);
+                q.push(neighbor);
             }
         }
     }
-    
-    for (int i = 2; i <= MAX_PRIME; i++) {
-        if (is_prime[i]) {
-            primes.push_back(i);
+
+    for (char c : chars) {
+        if (visited.find(c) == visited.end()) return false;
+    }
+
+    return true;
+}
+
+string solution(vector<string> &A) {
+    int N = A.size();
+    string result(N, '0');
+    unordered_map<char, unordered_set<char>> adj;
+    unordered_map<char, int> inDegree, outDegree;
+    unordered_set<char> chars;
+
+    for (int k = 0; k < N; ++k) {
+        adj.clear();
+        inDegree.clear();
+        outDegree.clear();
+        chars.clear();
+
+        for (int i = 0; i <= k; ++i) {
+            char u = A[i][0], v = A[i][1];
+            adj[u].insert(v);
+            outDegree[u]++;
+            inDegree[v]++;
+            chars.insert(u);
+            chars.insert(v);
         }
-    }
-}
 
-bool is_prime_sum(int a, int b) {
-    int sum = a + b;
-    for (int prime : primes) {
-        if (prime > sum) break;
-        if (sum == prime) return true;
-    }
-    return false;
-}
+        // Check degree conditions
+        int startNodes = 0, endNodes = 0;
+        for (char c : chars) {
+            if (outDegree[c] - inDegree[c] == 1) startNodes++;
+            if (inDegree[c] - outDegree[c] == 1) endNodes++;
+        }
 
-int dfs(int node, int parent, int parent_value) {
-    int result = 0;
-    
-    for (int prime_index = 0; prime_index < primes.size(); prime_index++) {
-        int prime = primes[prime_index];
+        bool degreeCondition = (startNodes == 0 && endNodes == 0) || (startNodes == 1 && endNodes == 1);
         
-        if (parent == 0 || !is_prime_sum(parent_value, prime)) {
-            if (dp[node][prime_index] != -1) {
-                result = (result + dp[node][prime_index]) % MOD;
-                continue;
-            }
-            
-            long long subtree_result = 1;
-            for (int child : adj[node]) {
-                if (child != parent) {
-                    subtree_result = (subtree_result * dfs(child, node, prime)) % MOD;
-                }
-            }
-            
-            dp[node][prime_index] = subtree_result;
-            result = (result + subtree_result) % MOD;
+        // Check connectivity
+        bool connectivityCondition = isConnected(adj, A[0][0], chars);
+        
+        if (degreeCondition && connectivityCondition) {
+            result[k] = '1';
         }
     }
-    
+
     return result;
 }
 
 int main() {
-    sieve();
-    memset(dp, -1, sizeof(dp));
+    vector<string> A1 = {"he", "ll", "lo", "el"};
+    vector<string> A2 = {"ab", "ba", "bq"};
     
-    int N;
-    std::cin >> N;
-    
-    for (int i = 0; i < N - 1; i++) {
-        int u, v;
-        std::cin >> u >> v;
-        adj[u].push_back(v);
-        adj[v].push_back(u);
-    }
-    
-    int result = dfs(1, 0, 0);
-    std::cout << result << std::endl;
-    
+    cout << solution(A1) << endl; // Expected output: "1001"
+    cout << solution(A2) << endl; // Expected output: "111"
+
     return 0;
 }

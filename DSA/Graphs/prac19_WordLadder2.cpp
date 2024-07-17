@@ -43,7 +43,7 @@ public:
                 char original = word[i];
                 for(char ch = 'a';ch<='z';ch++){
                     word[i] = ch;
-                    if(st.count(word) > 0){//to check if the word is in set
+                    if(st.count(word) > 0){//to check if the word is in set if it is in the set count will be 1
                         vec.push_back(word);
                         q.push(vec);
                         usedOnLevel.push_back(word);//track the words used on this level
